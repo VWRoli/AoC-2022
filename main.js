@@ -277,205 +277,278 @@
 //////////////////////////////////////////////////////////////////////////
 /////DAY 7/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-//console.log(data);
-// const clearData = data
-//   .split(/\n\s*\n/)
-//   .flatMap((d) => d.split(/\r?\n/))
-//   .filter((line) => !line.startsWith('$ ls') && !line.startsWith('dir'));
+// const data = `$ cd /
+// $ ls
+// dir a
+// 14848514 b.txt
+// 8504156 c.dat
+// dir d
+// $ cd a
+// $ ls
+// dir e
+// 29116 f
+// 2557 g
+// 62596 h.lst
+// $ cd e
+// $ ls
+// 584 i
+// $ cd ..
+// $ cd ..
+// $ cd d
+// $ ls
+// 4060174 j
+// 8033020 d.log
+// 5626152 d.ext
+// 7214296 k`;
+// console.log(data);
+// const convertedData = data.split(/\n\s*\n/).flatMap((d) => d.split(/\r?\n/));
+// function Node(data) {
+//   this.data = data;
+//   this.children = [];
+// }
 
-// console.log(clearData);
-// let dirStructure;
-// for (let i = 0; i < clearData.length; i++) {}
+// class Tree {
+//   constructor() {
+//     this.root = null;
+//   }
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+//   add(data, toNodeData) {
+//     const node = new Node(data);
+//     const parent = toNodeData ? this.findBFS(toNodeData) : null;
 
-//////////////////////////////////////////////////////////////////////////
-/////DAY 8/////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-// const convertedData = data
-//   .split(/\n\s*\n/)
-//   .flatMap((d) => d.split(/\r?\n/))
-//   .map((el) => el.split(''));
-// console.log(convertedData);
-// let count = 0;
-// let scores = [];
-// for (let i = 0; i < convertedData.length; i++) {
-//   // if (i === 0) count += convertedData[i].length;
-//   // if (i === convertedData[i].length - 1) count += convertedData[i].length;
-//   const tallest = Math.max(...convertedData[i]);
-//   //console.log(tallest);
-//   for (let j = 0; j < convertedData[i].length; j++) {
-//     //console.log(convertedData[i][j], i, j);
-
-//     if (
-//       i === 0 ||
-//       i === convertedData.length - 1 ||
-//       j === 0 ||
-//       j === convertedData[i].length - 1
-//     ) {
-//       count++;
+//     if (parent) {
+//       parent.children.push(node);
+//     } else if (!this.root) {
+//       this.root = node;
 //     } else {
-//       const column = getColumn(j);
-//       const row = convertedData[i];
-//       const value = +convertedData[i][j];
-//       const right = row.slice(j + 1);
-//       const left = row.slice(0, j).reverse();
-//       const top = column.slice(0, i).reverse();
-//       const bottom = column.slice(i + 1);
-
-//       const rightScore = getScore(right, value);
-//       const leftScore = getScore(left, value);
-//       const topScore = getScore(top, value);
-//       const bottomScore = getScore(bottom, value);
-//       // console.log(value);
-//       // console.log(top);
-//       // console.log('bottom', bottom);
-//       // console.log('top', top);
-//       // console.log(
-//       //   'bottom index',
-//       //   bottom.findIndex((el) => +el >= value)
-//       // );
-//       const scenicScore = rightScore * leftScore * topScore * bottomScore;
-//       //console.log(rightScore, leftScore, topScore, bottomScore);
-//       scores.push(scenicScore);
-//       //console.log(value, rightScore);
-//       // const visibleFromLeft = Math.max(...left) < value;
-//       // const visibleFromRight = Math.max(...right) < value;
-//       // const visibleFromTop = Math.max(...top) < value;
-//       // const visibleFromBottom = Math.max(...bottom) < value;
-
-//       // if (
-//       //   visibleFromBottom ||
-//       //   visibleFromLeft ||
-//       //   visibleFromRight ||
-//       //   visibleFromTop
-//       // )
-//       //   count++;
+//       return 'Already exists';
 //     }
-//     function getScore(arr, value) {
-//       const score = arr.findIndex((el) => +el >= value);
-//       // console.log(score);
-//       if (score === -1) {
-//         return arr.length;
-//       } else {
-//         return score + 1;
+//   }
+//   findBFS(data) {
+//     const queue = [this.root];
+//     let _node = null;
+
+//     this.traverseBFS((node) => {
+//       if (node.data === data) _node = node;
+//     });
+//     return _node;
+//   }
+//   traverseBFS(cb) {
+//     const queue = [this.root];
+//     if (cb) {
+//       while (queue.length) {
+//         const node = queue.shift();
+//         cb(node);
+
+//         for (const child of node.children) queue.push(child);
 //       }
-//     }
-//     function getColumn(n) {
-//       return convertedData.map((x) => x[n]);
 //     }
 //   }
 // }
-// console.log(scores.sort((a, b) => b - a));
-// console.log(count);
+
+// let tree = new Tree();
+// let currentDir = '/';
+// while (convertedData.length > 0) {
+//   const line = convertedData.shift(0);
+
+//   const pathName = line.split(' ')[2];
+//   if (line === '$ cd /') tree.add({ pathName });
+//   if (line.startsWith('1')) {
+//     console.log('startwith');
+//     tree.add(
+//       { name: line.split(' ')[1], size: line.split(' ')[0] },
+//       currentDir
+//     );
+//   }
+//   // if (line.startsWith('$ cd') && line !== '$ cd ..') {
+//   //   //
+//   // }
+// }
+// console.log(currentDir);
+// tree.traverseBFS((node) => console.log(node));
 
 //////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-/////DAY 9/////////////////////////////////////////////////////////////////////
+/////DAY 10/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-const data = `R 5
-U 8
-L 8
-D 3
-R 17
-D 10
-L 25
-U 20`;
-
+const data = `addx 1
+noop
+addx 5
+addx -1
+addx 5
+addx 1
+noop
+noop
+addx 2
+addx 5
+addx 2
+addx 1
+noop
+addx -21
+addx 26
+addx -6
+addx 8
+noop
+noop
+addx 7
+noop
+noop
+noop
+addx -37
+addx 13
+addx -6
+addx -2
+addx 5
+addx 25
+addx 2
+addx -24
+addx 2
+addx 5
+addx 5
+noop
+noop
+addx -2
+addx 2
+addx 5
+addx 2
+addx 7
+addx -2
+noop
+addx -8
+addx 9
+addx -36
+noop
+noop
+addx 5
+addx 6
+noop
+addx 25
+addx -24
+addx 3
+addx -2
+noop
+addx 3
+addx 6
+noop
+addx 9
+addx -8
+addx 5
+addx 2
+addx -7
+noop
+addx 12
+addx -10
+addx 11
+addx -38
+addx 22
+addx -15
+addx -3
+noop
+addx 32
+addx -25
+addx -7
+addx 11
+addx 5
+addx 10
+addx -9
+addx 17
+addx -12
+addx 2
+noop
+addx 2
+addx -15
+addx 22
+noop
+noop
+noop
+addx -35
+addx 7
+addx 21
+addx -25
+noop
+addx 3
+addx 2
+noop
+addx 7
+noop
+addx 3
+noop
+addx 2
+addx 9
+addx -4
+addx -2
+addx 5
+addx 2
+addx -2
+noop
+addx 7
+addx 2
+addx -39
+addx 2
+noop
+addx 1
+noop
+addx 5
+addx 24
+addx -20
+addx 1
+addx 5
+noop
+noop
+addx 4
+noop
+addx 1
+noop
+addx 4
+addx 3
+noop
+addx 2
+noop
+noop
+addx 1
+addx 2
+noop
+addx 3
+noop
+noop`;
 const convertedData = data.split(/\n\s*\n/).flatMap((d) => d.split(/\r?\n/));
-
-//const head = [0, 0];
-//let tail = [0, 0];
-let tailPositions = [];
-let rope = [
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-  [0, 0],
-];
+console.log(convertedData);
+let value = 1;
+let signalStrength = [];
+let count = 0;
 for (let i = 0; i < convertedData.length; i++) {
-  let movements = convertedData[i].split(' ')[1];
+  const line = convertedData[i];
+  if (line !== 'noop') {
+    for (let j = 0; j < 2; j++) {
+      count++;
+      if (
+        count === 20 ||
+        count === 60 ||
+        count === 100 ||
+        count === 140 ||
+        count === 180 ||
+        count === 220
+      ) {
+        signalStrength.push(value * count);
+      }
+      if (j > 0) {
+        const lineValue = +line.split(' ')[1];
 
-  const direction = convertedData[i].charAt(0);
-  while (movements > 0) {
-    rope[0] = updateHead(rope[0], direction);
-
-    movements--;
-    for (let j = 1; j < rope.length; j++) {
-      rope[j] = updateTail(rope[j - 1], rope[j]);
-      tailPositions.push(`[${updateTail(rope[9 - 1], rope[9])}]`);
+        value += lineValue;
+      }
     }
-    // tail = updateTail(newHead, tail);
-  }
-}
-console.log(rope);
-
-console.log(new Set(tailPositions));
-function updateTail(head, tail) {
-  // const headStr = `[${head}]`;
-  // const tailStr = `[${tail}]`;
-  const distance = `[${head[0] - tail[0]},${head[1] - tail[1]}]`;
-  //console.log(tail, head, distance);
-  const changeForTail = {
-    '[0,2]': [0, 1], //2up
-    '[1,2]': [1, 1], //1r, 2up
-    '[2,1]': [1, 1],
-    '[2,0]': [1, 0], //2r
-    '[2,-1]': [1, -1], //2r, 1down
-    '[1,-2]': [1, -1], //
-    '[0,-2]': [0, -1], //2down
-    '[-1,-2]': [-1, -1],
-    '[-2,-1]': [-1, -1],
-    '[-2,0]': [-1, 0], //2left
-    '[-2,1]': [-1, 1],
-    '[-1,2]': [-1, 1],
-    //added for part2
-    '[2,2]': [1, 1],
-    '[2,-2]': [1, -1],
-    '[-2,-2]': [-1, -1],
-    '[-2,2]': [-1, 1],
-  };
-  let newTailPos;
-  if (changeForTail[distance]) {
-    //calc
-    const coords = changeForTail[distance];
-    newTailPos = [tail[0] + coords[0], tail[1] + coords[1]];
   } else {
-    newTailPos = tail;
-  }
-  //todo tailPositions.push(`[${newTailPos}]`);
-  // console.log(newTailPos);
-  return newTailPos;
-}
-function updateHead(head, dir) {
-  switch (dir) {
-    case 'R':
-      head[0] += 1;
-      return head;
-    case 'L':
-      head[0] -= 1;
-      return head;
-    case 'U':
-      head[1] += 1;
-      return head;
-    case 'D':
-      head[1] -= 1;
-      return head;
-
-    default:
-      return head;
+    count++;
+    if (
+      count === 20 ||
+      count === 60 ||
+      count === 100 ||
+      count === 140 ||
+      count === 180 ||
+      count === 220
+    ) {
+      signalStrength.push(value * count);
+    }
   }
 }
+console.log(signalStrength.reduce((pv, cv) => pv + cv, 0));
