@@ -368,187 +368,90 @@
 // tree.traverseBFS((node) => console.log(node));
 
 //////////////////////////////////////////////////////////////////////////
-/////DAY 10/////////////////////////////////////////////////////////////////////
+/////DAY 11/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+const data = `Monkey 0:
+Starting items: 79, 98
+Operation: new = old * 19
+Test: divisible by 23
+  If true: throw to monkey 2
+  If false: throw to monkey 3
 
-const data = `addx 1
-noop
-addx 5
-addx -1
-addx 5
-addx 1
-noop
-noop
-addx 2
-addx 5
-addx 2
-addx 1
-noop
-addx -21
-addx 26
-addx -6
-addx 8
-noop
-noop
-addx 7
-noop
-noop
-noop
-addx -37
-addx 13
-addx -6
-addx -2
-addx 5
-addx 25
-addx 2
-addx -24
-addx 2
-addx 5
-addx 5
-noop
-noop
-addx -2
-addx 2
-addx 5
-addx 2
-addx 7
-addx -2
-noop
-addx -8
-addx 9
-addx -36
-noop
-noop
-addx 5
-addx 6
-noop
-addx 25
-addx -24
-addx 3
-addx -2
-noop
-addx 3
-addx 6
-noop
-addx 9
-addx -8
-addx 5
-addx 2
-addx -7
-noop
-addx 12
-addx -10
-addx 11
-addx -38
-addx 22
-addx -15
-addx -3
-noop
-addx 32
-addx -25
-addx -7
-addx 11
-addx 5
-addx 10
-addx -9
-addx 17
-addx -12
-addx 2
-noop
-addx 2
-addx -15
-addx 22
-noop
-noop
-noop
-addx -35
-addx 7
-addx 21
-addx -25
-noop
-addx 3
-addx 2
-noop
-addx 7
-noop
-addx 3
-noop
-addx 2
-addx 9
-addx -4
-addx -2
-addx 5
-addx 2
-addx -2
-noop
-addx 7
-addx 2
-addx -39
-addx 2
-noop
-addx 1
-noop
-addx 5
-addx 24
-addx -20
-addx 1
-addx 5
-noop
-noop
-addx 4
-noop
-addx 1
-noop
-addx 4
-addx 3
-noop
-addx 2
-noop
-noop
-addx 1
-addx 2
-noop
-addx 3
-noop
-noop`;
-const convertedData = data.split(/\n\s*\n/).flatMap((d) => d.split(/\r?\n/));
-console.log(convertedData);
-let value = 1;
-let signalStrength = [];
-let count = 0;
-for (let i = 0; i < convertedData.length; i++) {
-  const line = convertedData[i];
-  if (line !== 'noop') {
-    for (let j = 0; j < 2; j++) {
-      count++;
-      if (
-        count === 20 ||
-        count === 60 ||
-        count === 100 ||
-        count === 140 ||
-        count === 180 ||
-        count === 220
-      ) {
-        signalStrength.push(value * count);
-      }
-      if (j > 0) {
-        const lineValue = +line.split(' ')[1];
+Monkey 1:
+Starting items: 54, 65, 75, 74
+Operation: new = old + 6
+Test: divisible by 19
+  If true: throw to monkey 2
+  If false: throw to monkey 0
 
-        value += lineValue;
+Monkey 2:
+Starting items: 79, 60, 97
+Operation: new = old * old
+Test: divisible by 13
+  If true: throw to monkey 1
+  If false: throw to monkey 3
+
+Monkey 3:
+Starting items: 74
+Operation: new = old + 3
+Test: divisible by 17
+  If true: throw to monkey 0
+  If false: throw to monkey 1`;
+
+const convertedData = data.split(/\n\s*\n/).map((d) => d.split(/\r?\n/));
+
+const monkeyObjects = convertedData.map((m) => {
+  return {
+    name: m[0].replace(':', '').toLowerCase(),
+    items: convertToNumber(m[1]),
+    operation: m[2].split('=')[1].trim(),
+    divisibleBy: BigInt(m[3].split(' ')[3]),
+    ifTrue: +m[4].split(' ')[7],
+    ifFalse: +m[5].split(' ')[7],
+    inspect: 0,
+  };
+});
+
+for (let index = 0; index < 20; index++) {
+  for (let i = 0; i < monkeyObjects.length; i++) {
+    const monkey = monkeyObjects[i];
+    for (let j = 0; j < monkey.items.length; j++) {
+      const item = monkey.items[j];
+      monkey.inspect++;
+      const newItem = operation(item, monkey.operation) / 3n;
+
+      if (newItem % monkey.divisibleBy === 0) {
+        monkeyObjects[monkey.ifTrue].items.push(newItem);
+      } else {
+        monkeyObjects[monkey.ifFalse].items.push(newItem);
       }
     }
-  } else {
-    count++;
-    if (
-      count === 20 ||
-      count === 60 ||
-      count === 100 ||
-      count === 140 ||
-      count === 180 ||
-      count === 220
-    ) {
-      signalStrength.push(value * count);
-    }
+    monkey.items = [];
   }
 }
-console.log(signalStrength.reduce((pv, cv) => pv + cv, 0));
+console.log(monkeyObjects);
+console.log(monkeyObjects);
+function convertToNumber(item) {
+  return item
+    .split(' ')
+    .slice(2)
+    .map((x) => BigInt(x.replace(',', '')));
+}
+
+function operation(value, operationStr) {
+  const operand = operationStr.split(' ')[1];
+  const amount = +operationStr.split(' ')[2];
+  if (amount) {
+    switch (operand) {
+      case '+':
+        return (value += BigInt(amount));
+      case '*':
+        return (value *= BigInt(amount));
+
+      default:
+        return value;
+    }
+  } else {
+    return value * value;
+  }
+}
