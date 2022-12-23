@@ -374,6 +374,11 @@
 // abcryxxl
 // accszExk
 // acctuvwj
+// abdefghi`;//////////////////////////////////////////////////////
+// const data = `Sabqponm
+// abcryxxl
+// accszExk
+// acctuvwj
 // abdefghi`;
 // const convertedData = data
 //   .split(/\n\s*\n/)
@@ -863,39 +868,52 @@ const data = `[[[5,[10,6],5,1,6],4],[[9,[7,4,7],6,[],7],[[9,6,0,10],7,[8,5,5,2,7
 const convertedData = data
   .split(/\n\s*\n/)
   .map((d) => d.split(/\r?\n/))
-  .map((el) => el.map((x) => JSON.parse(x)));
+  .map((el) => el.map((x) => JSON.parse(x)))
+  .flat();
+convertedData.push([[2]]);
+convertedData.push([[6]]);
 
-let result = [];
+const sortedAData = convertedData
+  .sort((a, b) => {
+    const res = compare(a, b);
+    if (res) {
+      return -1;
+    } else if (!res) {
+      return 1;
+    } else {
+      return null;
+    }
+  })
+  .map((x) => JSON.stringify(x));
 
-function compare(a, b, index) {
+const index2 = sortedAData.findIndex((el) => el === '[[2]]') + 1;
+const index6 = sortedAData.findIndex((el) => el === '[[6]]') + 1;
+console.log(sortedAData.length);
+console.log({ sortedAData });
+console.log(index2 * index6);
+
+function compare(a, b) {
   for (let i = 0; i < Math.max(a.length, b.length); i++) {
-    if (result[index] !== undefined) return;
     const left = a[i];
     const right = b[i];
-    if (left === undefined) return result.push(true);
-    if (right === undefined) return result.push(false);
+    if (left === undefined) return true;
+    if (right === undefined) return false;
 
     if (Number.isInteger(left) && Number.isInteger(right)) {
       //both numbers
       if (left !== right) {
-        return left > right ? result.push(false) : result.push(true);
+        return left > right ? false : true;
       }
     } else if (Array.isArray(left) || Array.isArray(right)) {
       //one of them is an array
-      compare(
+      const comparison = compare(
         Array.isArray(left) ? left : [left],
-        Array.isArray(right) ? right : [right],
-        index
+        Array.isArray(right) ? right : [right]
       );
+      if (comparison !== null) {
+        return comparison;
+      }
     }
   }
+  return null;
 }
-
-convertedData.forEach((el, index) => compare(el[0], el[1], index));
-console.log(result);
-console.log(
-  result
-    .map((el, i) => (el ? (el = i + 1) : false))
-    .filter((x) => Number.isInteger(x))
-    .reduce((pv, cv) => pv + cv, 0)
-);
