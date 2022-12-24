@@ -1498,8 +1498,33 @@ for (let i = 0; i < convertedData.length; i++) {
 }
 
 const totalSize = updateSize(tree.root);
-console.log(totalSize);
+
 console.log(filterSmallDirectories(tree.root, 100000, 0));
+
+const availableSpace = 70000000;
+const neededSpace = 30000000;
+
+let unusedSpace = availableSpace - totalSize;
+
+const spaceNeededForUpdate = neededSpace - unusedSpace;
+
+let dirsToDelete = [];
+filterBigDirs(tree.root, spaceNeededForUpdate);
+console.log(dirsToDelete.sort((a, b) => a.size - b.size));
+function filterBigDirs(node, threshold) {
+  // console.log(node);
+  if (!node.isDir) {
+    return totalSize;
+  }
+  for (let child of Object.values(node.children)) {
+    filterBigDirs(child, threshold);
+  }
+
+  if (node.size >= threshold) {
+    console.log(node.size, threshold);
+    dirsToDelete.push(node);
+  }
+}
 
 function filterSmallDirectories(node, threshold, totalSize) {
   if (!node.isDir) {
